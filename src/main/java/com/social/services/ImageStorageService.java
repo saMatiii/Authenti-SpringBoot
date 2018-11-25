@@ -1,6 +1,10 @@
 package com.social.services;
 
+import com.oracle.tools.packager.Log;
+import com.social.dao.ImageRepository;
+import com.social.entities.Image;
 import org.slf4j.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -15,8 +19,11 @@ import java.nio.file.Paths;
 
 @Service
 public class ImageStorageService {
+    @Autowired
+    ImageRepository imageRepository;
+
    Logger log= LoggerFactory.getLogger(ImageStorageService.class);
-   private final Path rootLocation= Paths.get("C:\\Users\\afethall\\Desktop\\image_uplods");
+   private final Path rootLocation= Paths.get("/Users/mac/Desktop/test-copyImages");
 
 
         public void store(MultipartFile file){
@@ -52,4 +59,20 @@ public class ImageStorageService {
             throw new RuntimeException("Could not initialize storage!");
         }
     }
+
+    public void saveImage(MultipartFile file){
+        try {
+
+              byte[] imageByts=file.getBytes();
+              Image image= new Image("piName","some type",imageByts);
+              imageRepository.save(image);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.info("Could not read or save image in Repo ");
+            throw new RuntimeException("Could not Read or store image!");
+
+        }
+    }
+
 }

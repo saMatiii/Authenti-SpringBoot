@@ -29,6 +29,7 @@ public class UploadImageController {
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
         String message = "";
         try {
+            storageService.saveImage(file);
             storageService.store(file);
             files.add(file.getOriginalFilename());
 
